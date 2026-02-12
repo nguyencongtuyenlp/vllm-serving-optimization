@@ -259,28 +259,52 @@ Predefined profiles in `configs/benchmark_config.yaml`:
 
 ---
 
-## 📊 Example Results
+## 📊 Benchmark Results
 
-### vLLM Performance (GTX 1650 4GB, Qwen2.5-0.5B)
+### vLLM Performance (Lightning.ai Tesla T4, Qwen2.5-0.5B)
+
+#### Quick Profile (10 requests, concurrency 1)
 
 | Metric | Value |
 |--------|-------|
-| **TTFT Mean** | 45.2ms |
-| **TTFT P95** | 78.5ms |
-| **Latency P50** | 1.23s |
-| **Latency P95** | 2.45s |
-| **Throughput** | 124.7 tokens/s |
-| **VRAM Peak** | 3.2GB |
-| **Concurrency** | 4 |
+| **TTFT Mean** | 20.97ms ⚡ |
+| **TTFT Median** | 21.15ms |
+| **TTFT P95** | 26.36ms |
+| **Latency Mean** | 0.393s |
+| **Latency P95** | 0.420s |
+| **Throughput** | 124.27 tokens/s |
+| **VRAM Peak** | 13.8GB |
+| **Success Rate** | 100% (10/10) |
 
-### vLLM vs HF Baseline
+#### Medium Profile (100 requests, concurrency 4)
 
-| Backend | Throughput (tokens/s) | Latency P95 (s) | VRAM (GB) |
-|---------|----------------------|-----------------|-----------|
-| **vLLM** | 124.7 | 2.45 | 3.2 |
-| **HF Transformers** | 42.3 | 4.12 | 2.8 |
+| Metric | Value |
+|--------|-------|
+| **TTFT Mean** | 34.44ms ⚡ |
+| **TTFT Median** | 33.75ms |
+| **TTFT P95** | 43.06ms |
+| **Latency Mean** | 1.875s |
+| **Latency P95** | 1.893s |
+| **Throughput** | **402.77 tokens/s** 🚀 |
+| **VRAM Peak** | 13.8GB |
+| **Success Rate** | 100% (100/100) |
 
-> **Note**: Replace with your actual results after running benchmarks.
+### Key Insights
+
+- ✅ **TTFT < 35ms** - Excellent user-perceived responsiveness
+- ✅ **3.2x throughput scaling** with concurrency (124 → 403 tok/s)
+- ✅ **100% success rate** - No OOM or timeout errors
+- ✅ **Consistent P95 latency** - Stable under load
+
+### vLLM vs HF Baseline (Estimated)
+
+| Backend | Throughput (tokens/s) | Latency P95 (s) | VRAM (GB) | Speedup |
+|---------|----------------------|-----------------|-----------|---------|
+| **vLLM (concurrency 4)** | 402.77 | 1.893 | 13.8 | - |
+| **vLLM (concurrency 1)** | 124.27 | 0.420 | 13.8 | - |
+| **HF Transformers** | ~50-60 | ~3.5-4.5 | ~8-10 | **~7x slower** |
+
+> **Note**: HF baseline estimated based on published benchmarks. vLLM results from actual Lightning.ai runs (Feb 2026).
 
 ---
 
