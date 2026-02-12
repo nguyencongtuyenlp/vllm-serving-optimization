@@ -1,0 +1,44 @@
+# Benchmark Configuration Profiles
+
+# Quick test (for validation)
+quick:
+  num_requests: 10
+  concurrency: 1
+  prompt_tokens: 128
+  max_new_tokens: 64
+  warmup_requests: 2
+
+# Light load (baseline measurement)
+light:
+  num_requests: 50
+  concurrency: 2
+  prompt_tokens: 256
+  max_new_tokens: 128
+  warmup_requests: 5
+
+# Medium load (stress test for 4GB VRAM)
+medium:
+  num_requests: 100
+  concurrency: 4
+  prompt_tokens: 512
+  max_new_tokens: 256
+  warmup_requests: 10
+
+# Heavy load (max concurrency test)
+heavy:
+  num_requests: 200
+  concurrency: 8
+  prompt_tokens: 1024
+  max_new_tokens: 512
+  warmup_requests: 10
+
+# Default benchmark settings
+default:
+  server_url: "http://localhost:8000"
+  api_endpoint: "/v1/completions"
+  temperature: 0.7
+  top_p: 0.9
+  stream: true
+  timeout: 120
+  retry_attempts: 3
+  retry_delay: 2.0

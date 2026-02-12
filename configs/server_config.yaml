@@ -1,0 +1,31 @@
+# vLLM Server Configuration Profiles
+
+# Profile for 4GB VRAM (GTX 1650)
+low_vram:
+  max_model_len: 2048
+  gpu_memory_utilization: 0.85
+  dtype: "auto"
+  quantization: null
+  recommended_models:
+    - "Qwen/Qwen2.5-0.5B-Instruct"
+    - "Qwen/Qwen2.5-1.5B-Instruct-AWQ"
+
+# Profile for 8GB VRAM
+medium_vram:
+  max_model_len: 4096
+  gpu_memory_utilization: 0.90
+  dtype: "auto"
+  quantization: "awq"
+  recommended_models:
+    - "Qwen/Qwen2.5-3B-Instruct-AWQ"
+    - "Qwen/Qwen2.5-7B-Instruct-AWQ"
+
+# Profile for 16GB+ VRAM
+high_vram:
+  max_model_len: 8192
+  gpu_memory_utilization: 0.95
+  dtype: "auto"
+  quantization: null
+  recommended_models:
+    - "Qwen/Qwen2.5-7B-Instruct"
+    - "meta-llama/Llama-3.1-8B-Instruct"
