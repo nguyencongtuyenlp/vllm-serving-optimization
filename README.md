@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-> **Production-ready LLM serving optimization project** showcasing high-throughput inference with vLLM, comprehensive benchmarking, and performance tuning for resource-constrained environments.
+> **Production-ready LLM serving optimization project** showcasing high-throughput inference with vLLM, comprehensive benchmarking, and performance tuning.
 
 ## 🎯 Project Overview
 
@@ -11,9 +11,10 @@ This project demonstrates **systems engineering best practices** for deploying a
 
 - **OpenAI-compatible vLLM server** with Docker deployment
 - **Comprehensive benchmarking suite** measuring TTFT, latency percentiles, and throughput
-- **Performance optimization** for low-VRAM environments (4GB GPU)
+- **Performance optimization** with quantization and parameter tuning
 - **Baseline comparison** with HuggingFace Transformers
 - **Reproducible experiments** with configurable parameters
+- **Cloud deployment guide** for Lightning.ai (free GPU access)
 
 ### Key Performance Indicators (KPIs)
 
@@ -114,9 +115,12 @@ graph TB
 ### Prerequisites
 
 - **OS**: Linux or WSL2 Ubuntu 22.04
-- **GPU**: NVIDIA GPU with 4GB+ VRAM (or use Lightning.ai free GPU)
+- **GPU**: NVIDIA GPU with 12GB+ VRAM (T4, A10G, RTX 3060, or better)
+  - **Or use Lightning.ai free GPU** (recommended for getting started)
 - **Docker**: Docker + Docker Compose + NVIDIA Container Runtime
 - **Python**: 3.10+
+
+> **Note**: This project requires adequate GPU memory. For local testing without a powerful GPU, use the Lightning.ai deployment option which provides free T4 GPU access.
 
 ### Option 1: Run on Lightning.ai (Recommended - Free GPU!)
 
@@ -219,20 +223,20 @@ python -m baseline.hf_inference \
 
 ## ⚙️ Configuration
 
-### Model Selection (for 4GB VRAM)
+### Model Selection
 
 Recommended models in `.env`:
 
 ```bash
-# Option 1: Smallest unquantized (safest)
+# Default: Smallest unquantized model
 MODEL_ID=Qwen/Qwen2.5-0.5B-Instruct
 QUANTIZATION=
 
-# Option 2: Quantized 1.5B (if available)
+# For better performance: Quantized larger models
 MODEL_ID=Qwen/Qwen2.5-1.5B-Instruct-AWQ
 QUANTIZATION=awq
 
-# Option 3: TinyLlama GPTQ
+# Alternative: TinyLlama GPTQ
 MODEL_ID=TheBloke/TinyLlama-1.1B-Chat-v1.0-GPTQ
 QUANTIZATION=gptq
 ```
@@ -241,12 +245,12 @@ QUANTIZATION=gptq
 
 Key parameters in `.env`:
 
-| Parameter | Description | 4GB VRAM | 8GB VRAM |
-|-----------|-------------|----------|----------|
-| `MAX_MODEL_LEN` | Max context length | 2048 | 4096 |
-| `GPU_MEMORY_UTILIZATION` | VRAM allocation | 0.85 | 0.90 |
-| `DTYPE` | Data type | auto | auto |
-| `QUANTIZATION` | Quantization method | awq/gptq | awq |
+| Parameter | Description | Recommended Value |
+|-----------|-------------|-------------------|
+| `MAX_MODEL_LEN` | Max context length | 2048-4096 |
+| `GPU_MEMORY_UTILIZATION` | VRAM allocation | 0.85-0.90 |
+| `DTYPE` | Data type | auto |
+| `QUANTIZATION` | Quantization method | awq/gptq |
 
 ### Benchmark Profiles
 
@@ -407,11 +411,11 @@ Unlike static batching, vLLM uses **continuous batching**:
 
 **Bullet points for resume/CV:**
 
-- Built an **OpenAI-compatible LLM serving stack** with vLLM and reproducible Docker runtime; optimized inference under 4GB VRAM constraints using quantized small models (AWQ/GPTQ).
+- Built an **OpenAI-compatible LLM serving stack** with vLLM achieving **3.2x throughput scaling** (124 → 403 tokens/s) under concurrent load; deployed on Lightning.ai Tesla T4 GPU with reproducible Docker runtime.
 
-- Implemented a **benchmarking harness** measuring TTFT, p50/p95/p99 latency, throughput (tokens/s), and VRAM peak under concurrent load; produced reproducible CSV/JSON reports.
+- Implemented a **benchmarking harness** measuring TTFT (21-34ms), p50/p95/p99 latency, and throughput under concurrent load; achieved 100% success rate with comprehensive CSV/JSON reporting.
 
-- Compared **vLLM vs Transformers baseline** and documented tuning trade-offs (max context length vs concurrency vs memory utilization) for resource-constrained environments.
+- Optimized **high-throughput LLM inference** through parameter tuning (max_model_len, gpu_memory_utilization) and quantization strategies; documented performance trade-offs and deployment best practices.
 
 **Keywords**: High-throughput inference, continuous batching, KV cache optimization, latency percentiles, performance benchmarking, Docker containerization, systems engineering, reproducibility
 
